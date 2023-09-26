@@ -5,9 +5,13 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0, minimum-scale=0.5">
-    <link href="../css/index.css" rel="stylesheet" type="text/css">
+    <link href="css/index.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<!--    <script src="js/subscription.js"></script>-->
+<!--    <script src="js/up-button.js"></script>-->
+    <script src="js/shopping-cart.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <title>Globetrotter</title>
 </head>
 
@@ -15,7 +19,7 @@
 <header>
     <figure class="fir-image-figure">
         <a class="fir-imageover" rel="noopener" target="_blank" href="https://twitter.com/_davideast">
-            <img class="fir-author-image fir-clickcircle" src="../img/users-logo.png" alt="David East - Author">
+            <img class="fir-author-image fir-clickcircle" src="img/users-logo.png" alt="David East - Author">
             <div class="fir-imageover-color"></div>
         </a>
 
@@ -43,7 +47,7 @@
         <div class="modal-content">
             <span class="close">&times;</span>
             <div class="adv-wrapper">
-                <img src="../img/adv.jpeg" alt="">
+                <img src="img/adv.jpeg" alt="">
                 <p>Дорогі абітурієнти!
                     <br>Щиро запрошуємо вас вступити до матечатичного факультету ЧНУ
                     <br>Звертатися за адресою Головна, 119!
@@ -58,7 +62,7 @@
     <div data-collapse="all" data-animation="default" data-duration="400" data-easing="ease-out" data-easing2="ease out"
          role="banner" class="navigation">
         <nav class="navigation-container">
-            <a href="index.php?action=main" aria-current="page" class="logo w-inline-block"><img class="logo1" src="../img/logo1.png" alt=""></a>
+            <a href="index.php?action=main" aria-current="page" class="logo w-inline-block"><img class="logo1" src="img/logo1.png" alt=""></a>
             <div class="hamburger-menu">
                 <input id="menu__toggle" type="checkbox" />
                 <label class="menu__btn" for="menu__toggle">

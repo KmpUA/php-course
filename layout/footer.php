@@ -3,10 +3,10 @@
         <h3>Globetrotter</h3>
         <p>Бажаємо вам гарного відпочинку з нашим туроператом</p>
         <ul class="socials">
-            <li><a href="https://www.facebook.com/"><img class="soc" src="../img/facebook.png" alt=""></a></li>
-            <li><a href="https://www.instagram.com/paranyuk91/"><img class="soc" src="../img/instagram.png" alt=""></a></li>
+            <li><a href="https://www.facebook.com/"><img class="soc" src="img/facebook.png" alt=""></a></li>
+            <li><a href="https://www.instagram.com/paranyuk91/"><img class="soc" src="img/instagram.png" alt=""></a></li>
             <li><a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley"><img class="soc"
-                                                                                                 src="../img/youtube.png" alt=""></a></li>
+                                                                                                 src="img/youtube.png" alt=""></a></li>
         </ul>
     </div>
     <div class="footer-bottom">
@@ -22,10 +22,6 @@
     </div>
 
 </footer>
-<script src="../js/subscription.js"></script>
-<script src="../js/up-button.js"></script>
-<script src="../js/shopping-cart.js"></script>
-<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 </body>
 
 </html>

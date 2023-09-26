@@ -89,11 +89,5 @@
     </div>
   </div>
 </main>
-<script src="../js/aside.js"></script>
-<script src="../js/subscription.js"></script>
-<script src="../js/load-images.js"></script>
-<script src="../js/cards.js"></script>
-<script src="../js/discount.js"></script>
-<script src="../js/up-button.js"></script>
-<script src="../js/shopping-cart.js"></script>
-<script src="../js/search_engine.js"></script>
+<script src="./js/load-images.js"></script>
+<script src="./js/aside.js"></script>
