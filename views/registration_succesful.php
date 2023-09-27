@@ -1,5 +1,5 @@
 <div style="display: flex; align-items: center; justify-content: center" class="cont">
-    <button style="background-color: green; margin: 10vw" action="index.php?action=main" type="button" class="card-btn">Registration succesful!</button>
+    <a style="text-decoration: none; background-color: green; margin: 10vw" href="index.php?action=main" type="submit" class="card-btn">Registration succesful!</a>
 </div>
 
 <script>

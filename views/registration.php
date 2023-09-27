@@ -1,7 +1,78 @@
 <!DOCTYPE html>
 <?php
+$con = new mysqli("localhost","kmp","Max6112073","tourfirm");
+if ($con->connect_errno != 0){
+    die($con->connect_error);
+}
+
+function better_crypt($input, $rounds = 7): string
+{
+    $salt = "";
+    $salt_chars = array_merge(range('A','Z'), range('a','z'), range(0,9));
+    for($i=0; $i < 22; $i++) {
+        $salt .= $salt_chars[array_rand($salt_chars)];
+    }
+    return crypt($input, sprintf('$2a$%02d$', $rounds) . $salt);
+}
+class User{
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPhoneNumber(): string
+    {
+        return $this->phoneNumber;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPassword(): string
+    {
+        return $this->password;
+    }
+    private string $name;
+    private string $email;
+    private string $phoneNumber;
+    private string $password;
+
+    function set_name(string $value): void
+    {
+        $this->name = $value;
+    }
+    function set_email(string $value): void
+    {
+        $this->email = $value;
+    }
+    function set_password(string $value): void
+    {
+        $this->password = $value;
+    }
+    function set_phoneNumber(string $value): void
+    {
+        $this->phoneNumber = $value;
+    }
+
+}
+
+$registerUser = new User();
 $nameErr = $emailErr = $mobilenoErr = $passwordErr = $passwordcErr = "";
-$name = $email = $mobileno = $signupEmail = $signupPsw = $signupPswc = "";
+$registerPswc = "";
 $validated = true;
 
 function input_data(mixed $signupLogin): string
@@ -16,8 +87,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $nameErr = "Ви повинні ввести логін!";
         $validated = false;
     } else{
-        $name = input_data($_POST["signupLogin"]);
-        if(!preg_match("/^[а-яА-Яa-zA-Z0-9_-]{4,}$/", $name)){
+        $registerUser->set_name(input_data($_POST["signupLogin"]));
+        if(!preg_match("/^[а-яА-Яa-zA-Z0-9_-]{4,}$/", $registerUser->getName())){
             $nameErr = "Не менше 4 кириличних або латинських літер!";
             $validated = false;
         }
@@ -26,8 +97,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $emailErr = "Ви повинні ввести email!";
         $validated = false;
     } else{
-        $signupEmail = input_data($_POST["signupEmail"]);
-        if(!filter_var($signupEmail, FILTER_VALIDATE_EMAIL)){
+        $registerUser->set_email(input_data($_POST["signupEmail"]));
+        if(!filter_var($registerUser->getEmail(), FILTER_VALIDATE_EMAIL)){
             $emailErr = "Неправильно введений email!";
             $validated = false;
         }
@@ -36,13 +107,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $mobilenoErr = "Не введений номер телефону!";
         $validated = false;
     } else {
-        $mobileno = input_data($_POST["phoneNumber"]);
-        if (!preg_match ("/^[0-9]*$/", $mobileno) ) {
-            $mobilenoErr = "Можуть бути тільки числа!";
-            $validated = false;
-        }
-        if (strlen ($mobileno) != 10) {
-            $mobilenoErr = "Номер телефону повинен містити 10 цифр";
+        $registerUser->set_phoneNumber(input_data($_POST["phoneNumber"]));
+        if (!preg_match ("/^\(\d{3}\) \d{7}$/", $registerUser->getPhoneNumber()) && !preg_match("/^\+380\d{9}$/", $registerUser->getPhoneNumber()) && !preg_match("/^\(\d{3}\) \d{2}-\d{2}-\d{3}$/", $registerUser->getPhoneNumber()) && !preg_match("/^\+38 \(\d{3}\) \d{2} \d{2} \d{3}$/", $registerUser->getPhoneNumber())) {
+            $mobilenoErr = "Неправильний формат номеру телефона!";
             $validated = false;
         }
     }
@@ -50,8 +117,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $passwordErr = "Ви повинні вести пароль!";
         $validated = false;
     } else{
-        $signupPsw = input_data($_POST["signupPsw"]);
-        if(!preg_match("/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z0-9]{7,}$/", $signupPsw)){
+        $registerUser->set_password(input_data($_POST["signupPsw"]));
+        if(!preg_match("/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z0-9]{7,}$/", $registerUser->getPassword())){
             $passwordErr = "Пароль повинен містити не менше 7 літер, великі та малі літери, а також цифри!";
             $validated = false;
         }
@@ -61,12 +128,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $validated = false;
     } else{
         $signupPswc = input_data($_POST["signupPswc"]);
-        if($signupPswc != $signupPsw){
+        if($signupPswc != $registerUser->getPassword()){
             $passwordcErr = "Паролі не співпадають!";
             $validated = false;
         }
     }
     if($validated){
+        $name = $email = $phoneNumber = $signupPsw = "";
+        $name = $con->real_escape_string($registerUser->getName());
+        $email = $con->real_escape_string($registerUser->getEmail());
+        $phoneNumber = $con->real_escape_string($registerUser->getPhoneNumber());
+        $signupPsw = better_crypt($con->real_escape_string($registerUser->getPassword()));
+        $query = "INSERT INTO users (user_login, user_email, user_password, user_phonenumber) VALUES ('$name', '$email', '$signupPsw', '$phoneNumber')";
+        if (!mysqli_query($con, $query)) {
+            printf("%d Row inserted.\n", mysqli_affected_rows($con));
+        }
         header("Location:/php-website/index.php?action=registration_succesful");
     }
 }
