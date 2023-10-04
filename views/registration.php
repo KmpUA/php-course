@@ -5,69 +5,52 @@ if ($con->connect_errno != 0){
     die($con->connect_error);
 }
 
-function better_crypt($input, $rounds = 7): string
+class User
 {
-    $salt = "";
-    $salt_chars = array_merge(range('A','Z'), range('a','z'), range(0,9));
-    for($i=0; $i < 22; $i++) {
-        $salt .= $salt_chars[array_rand($salt_chars)];
-    }
-    return crypt($input, sprintf('$2a$%02d$', $rounds) . $salt);
-}
-class User{
-    /**
-     * @return string
-     */
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    /**
-     * @return string
-     */
-    public function getEmail(): string
-    {
-        return $this->email;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPhoneNumber(): string
-    {
-        return $this->phoneNumber;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPassword(): string
-    {
-        return $this->password;
-    }
     private string $name;
     private string $email;
     private string $phoneNumber;
     private string $password;
 
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
+
+    public function getPhoneNumber(): string
+    {
+        return $this->phoneNumber;
+    }
+
+    public function getPassword(): string
+    {
+        return $this->password;
+    }
+
     function set_name(string $value): void
     {
         $this->name = $value;
     }
+
     function set_email(string $value): void
     {
         $this->email = $value;
     }
+
     function set_password(string $value): void
     {
         $this->password = $value;
     }
+
     function set_phoneNumber(string $value): void
     {
         $this->phoneNumber = $value;
     }
-
 }
 
 $registerUser = new User();
@@ -138,8 +121,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $name = $con->real_escape_string($registerUser->getName());
         $email = $con->real_escape_string($registerUser->getEmail());
         $phoneNumber = $con->real_escape_string($registerUser->getPhoneNumber());
-        $signupPsw = better_crypt($con->real_escape_string($registerUser->getPassword()));
-        $query = "INSERT INTO users (user_login, user_email, user_password, user_phonenumber) VALUES ('$name', '$email', '$signupPsw', '$phoneNumber')";
+        $signupPsw = password_hash($con->real_escape_string($registerUser->getPassword()), PASSWORD_DEFAULT);
+        $query = "INSERT INTO users (user_login, user_email, user_password, user_phonenumber, admin) VALUES ('$name', '$email', '$signupPsw', '$phoneNumber', 0)";
         if (!mysqli_query($con, $query)) {
             printf("%d Row inserted.\n", mysqli_affected_rows($con));
         }
@@ -174,26 +157,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
     <div class="forms">
         <div class="form-content">
-            <div class="login-form">
-                <div class="title">Авторизація</div>
-                <form action="index.php?action=registration">
-                    <div class="input-boxes">
-                        <div class="input-box">
-                            <i class="fas fa-envelope"></i>
-                            <input type="text" placeholder="Enter your email">
-                        </div>
-                        <div class="input-box">
-                            <i class="fas fa-lock"></i>
-                            <input type="password" placeholder="Enter your password">
-                        </div>
-                        <div class="text"><a href="#">Забули пароль</a></div>
-                        <div class="button input-box">
-                            <input type="submit" value="Sumbit">
-                        </div>
-                        <div class="text sign-up-text">Немає аккаунту? <label for="flip">Зареєструватися</label></div>
-                    </div>
-                </form>
-            </div>
             <div class="signup-form">
                 <div class="title">Реєстрація</div>
                 <form action="index.php?action=registration" method="post">
@@ -226,7 +189,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <div class="button input-box">
                             <input type="submit" value="Зареєструватися">
                         </div>
-                        <div class="text sign-up-text">Вже є аккаунт? <label for="flip">Авторизуватися</label></div>
+                        <div class="text sign-up-text">Вже є аккаунт? <a href="index.php?action=login" for="flip">Авторизуватися</a></div>
                     </div>
                 </form>
             </div>

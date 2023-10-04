@@ -1,6 +1,7 @@
 <?php
+session_start();
 $action = $_GET["action"];
-if($action != "registration") require_once("layout/header.php");
+if($action != "registration" && $action != "login" && $action != "logout") require_once("layout/header.php");
 $dirPath = "views";
 $files = scandir($dirPath);
 $pathFiles = [];
@@ -17,4 +18,4 @@ if(in_array("$action.php", $pathFiles)){
 else{
     require_once("views/main.php");
 }
-if($action != "registration") require_once("layout/footer.php");
+if($action != "registration" && $action != "login") require_once("layout/footer.php");

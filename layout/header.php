@@ -1,3 +1,11 @@
+<?php
+$status = $_SESSION["loggedin"];
+$authorizationButton = "Авторизація";
+if($status == "true"){
+    $authorizationButton = "Вийти";
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -73,7 +81,7 @@
                     <li><a class="menu__item" href="#container-meme">Тури</a></li>
                     <li><a class="menu__item" href="../views/about.php">Про нас</a></li>
                     <li><a class="menu__item" href=".#">Інформація</a></li>
-                    <li><a class="menu__item" href="../views/registration.php">Авторизація</a></li>
+                    <li><a class="menu__item" href="index.php?action=login">Авторизація</a></li>
                     <li><a class="menu__item" href="#">Бутстрап</a></li>
                 </ul>
             </div>
@@ -91,8 +99,15 @@
             </nav>
             <section class="utils">
                 <div class="reg">
-                    <div class="login log-1"><a href="index.php?action=registration" class="nav-link1">Авторизація</a></div>
+                    <div class="login log-1"><a href="<?php
+                        if($_SESSION["loggedin"]){
+                            echo "index.php?action=logout";
+                        }
+                        else{
+                            echo "index.php?action=login";
+                        }?>" class="nav-link1"><?=$authorizationButton?></a></div>
                 </div>
+                <div class="card-title" style="text-decoration: none; font-size: xx-large; margin: 20px"><?=$_SESSION["login"]?></div>
                 <div class="cart-btn">
                     <i id="cart" class="fas fa-shopping-cart"></i>
                     <span class="cart-quantity">0</span>

@@ -1,0 +1,8 @@
+<?php
+session_start();
+
+$_SESSION = array();
+
+session_destroy();
+header("Location: /php-website/index.php?action=main");
+exit;
