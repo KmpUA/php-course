@@ -26,7 +26,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     }
 
     if(empty($username_err) && empty($password_err)){
-        $sql = "SELECT user_id, user_login, user_password, admin FROM users WHERE user_login = ?";
+        $sql = "SELECT user_id, user_login, user_password, admin, register_time FROM users WHERE user_login = ?";
 
         if($stmt = $mysqli->prepare($sql)){
             $stmt->bind_param("s", $param_username);
@@ -37,7 +37,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 $stmt->store_result();
 
                 if($stmt->num_rows == 1){
-                    $stmt->bind_result($id, $username, $hashed_password, $admin);
+                    $stmt->bind_result($id, $username, $hashed_password, $admin, $register_date);
                     if($stmt->fetch()){
                         if(password_verify($password, $hashed_password)){
                             session_start();
@@ -46,6 +46,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                             $_SESSION["id"] = $id;
                             $_SESSION["login"] = $username;
                             $_SESSION["admin"] = $admin;
+                            $_SESSION["register_date"] = $register_date;
 
                             header("Location: /php-website/index.php?action=main");
                         } else{

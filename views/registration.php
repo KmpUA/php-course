@@ -117,12 +117,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
     if($validated){
+        $date = date('Y-m-d H:i:s');
         $name = $email = $phoneNumber = $signupPsw = "";
         $name = $con->real_escape_string($registerUser->getName());
         $email = $con->real_escape_string($registerUser->getEmail());
         $phoneNumber = $con->real_escape_string($registerUser->getPhoneNumber());
         $signupPsw = password_hash($con->real_escape_string($registerUser->getPassword()), PASSWORD_DEFAULT);
-        $query = "INSERT INTO users (user_login, user_email, user_password, user_phonenumber, admin) VALUES ('$name', '$email', '$signupPsw', '$phoneNumber', 0)";
+        $query = "INSERT INTO users (user_login, user_email, user_password, user_phonenumber, admin, register_time) VALUES ('$name', '$email', '$signupPsw', '$phoneNumber', 0, '$date')";
         if (!mysqli_query($con, $query)) {
             printf("%d Row inserted.\n", mysqli_affected_rows($con));
         }

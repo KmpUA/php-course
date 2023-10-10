@@ -19,8 +19,14 @@
   margin-right: auto;
   align-items: center;
   border-bottom: 5px solid rgba(19, 114, 117, 0.4);
-  height: 13vh;
+  height: 10vh;
   justify-content: space-around;
+}
+
+.profile-wrapper{
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
 }
 
 .header-content{
@@ -642,12 +648,22 @@ label,
   transition: all 0.5s cubic-bezier(0.6, 0, 0.4, 1);
 }
 
+.crud_container{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 3vw;
+}
+
 #wrapper {
-  overflow: hidden;
   display: flex;
   align-items: center;
-  width: 100%;
   flex-direction: column;
+}
+
+.crud_error{
+  color: red;
 }
 
 #signin:checked~#wrapper {
@@ -2160,19 +2176,21 @@ input[type="range"]::-moz-range-thumb {
 }
 
 .users-card-profile{
-  scale: 0.5;
+  width: 10%;
+  height: 10%;
 }
 
 .users-logo{
   cursor: pointer;
-  scale: 0.25;
+  width: 110%;
+  height: 110%;
 }
 
 .utils{
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
 }
 
@@ -2186,8 +2204,8 @@ input[type="range"]::-moz-range-thumb {
 .fir-image-figure {
   font-size: 0.8em;
   margin: 0;
-  color: black;
   display: none;
+  color: black;
   flex-direction: column;
   align-items: center;
   margin-bottom: 40px;
@@ -2221,19 +2239,23 @@ input[type="range"]::-moz-range-thumb {
 }
 
 .fir-image-figure .caption, .fir-image-figure figcaption {
-  padding-left: 15px;
+  display: flex;
+  align-items: start;
+  justify-content: center;
+  flex-direction: column;
+  margin: 10px;
 }
 
 html.wf-active .fir-image-figure .fig-author-figure-title {
   font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
-  font-size: 16px;
+  font-size: 2em;
 }
 
 .fir-image-figure .fig-author-figure-title {
   color: grey;
   font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
   font-weight: 400;
-  font-size: 15px;
+  font-size: 2em;
   margin-top: 2px;
 }
 

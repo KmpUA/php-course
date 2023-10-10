@@ -18,13 +18,13 @@ if($status == "true"){
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 <!--    <script src="js/subscription.js"></script>-->
 <!--    <script src="js/up-button.js"></script>-->
-    <script src="js/shopping-cart.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <title>Globetrotter</title>
 </head>
 
 <body class="body">
 <header>
+    <div id="loader"></div>
     <figure class="fir-image-figure">
         <a class="fir-imageover" rel="noopener" target="_blank" href="https://twitter.com/_davideast">
             <img class="fir-author-image fir-clickcircle" src="img/users-logo.png" alt="David East - Author">
@@ -32,14 +32,29 @@ if($status == "true"){
         </a>
 
         <figcaption class="figcaption">
-            <div class="fig-author-figure-title">David East</div>
-            <div class="fig-author-figure-title">Engineer at Google on Firebase.</div>
-            <div class="fig-author-figure-title">Jan. 16th, 2017 &#8212; 5m read</div>
+            <?php
+            if($status == "true"){?>
+                <div class="fig-author-figure-title"><?= $_SESSION["login"] ?></div>
+                <div class="fig-author-figure-title"><?php if($_SESSION["admin"] == 0) echo "User"; else echo "Admin";?></div>
+                <div class="fig-author-figure-title"><?= $_SESSION["register_date"] ?></div>
         </figcaption>
         <div class="func-btns">
             <button class="adminpanel-btn button-86" role="button" onclick="window.location.href = './adminpanel.html'">Адмін-панель</button>
-            <button class="logout-btn button-86" role="button">Вийти</button>
+            <a class="profile-wrapper" href="index.php?action=logout"> <button class="logout-btn button-86" role="button">Вийти</button> </a>
         </div>
+            <?php }
+            else{?>
+                <div class="fig-author-figure-title">Ви не авторизовані!</div>
+        </figcaption>
+                <div class="func-btns">
+                    <button class="adminpanel-btn button-86" role="button" onclick="window.location.href = './adminpanel.html'">Адмін-панель</button>
+                    <a class="profile-wrapper" href="index.php?action=login"> <button class="logout-btn button-86" role="button" action="login">Авторизуватися</button> </a>
+                </div>
+            <?php } ?>
+
+
+
+
     </figure>
     <div id="subscribe-popup" class="subscribe-popup hidden">
         <div class="subscribe-popup-content">
@@ -98,16 +113,6 @@ if($status == "true"){
                 </ul>
             </nav>
             <section class="utils">
-                <div class="reg">
-                    <div class="login log-1"><a href="<?php
-                        if($_SESSION["loggedin"]){
-                            echo "index.php?action=logout";
-                        }
-                        else{
-                            echo "index.php?action=login";
-                        }?>" class="nav-link1"><?=$authorizationButton?></a></div>
-                </div>
-                <div class="card-title" style="text-decoration: none; font-size: xx-large; margin: 20px"><?=$_SESSION["login"]?></div>
                 <div class="cart-btn">
                     <i id="cart" class="fas fa-shopping-cart"></i>
                     <span class="cart-quantity">0</span>
@@ -115,10 +120,12 @@ if($status == "true"){
                 <div class="menu-button">
                     <div class="icon-2 w-icon-nav-menu"></div>
                 </div>
-<!--                <div class="users-card-profile">-->
-<!--                    <img class="users-logo" src="../img/users-logo.png" alt="">-->
-<!--                </div>-->
+                <div class="users-card-profile">
+                    <img class="users-logo" src="img/users-logo.png" alt="">
+                </div>
             </section>
         </nav>
     </div>
 </header>
+<script src="js/loader.js"></script>
+<script src="js/shopping-cart.js"></script>

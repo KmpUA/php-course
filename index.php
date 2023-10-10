@@ -1,18 +1,14 @@
 <?php
+require_once("vendor/autoload.php");
+$dotenv = Dotenv\Dotenv::createUnsafeImmutable(__DIR__);
+$dotenv->load();
+require_once("util/database_model.php");
+$db = new DatabaseModel();
 session_start();
 $action = $_GET["action"];
 if($action != "registration" && $action != "login" && $action != "logout") require_once("layout/header.php");
-$dirPath = "views";
-$files = scandir($dirPath);
-$pathFiles = [];
-foreach ($files as $file) {
-    $filePath = $dirPath . '/' . $file;
-    if (is_file($filePath)) {
-        $pathFiles[] = $file;
-    }
-}
 $action = $_GET["action"];
-if(in_array("$action.php", $pathFiles)){
+if(file_exists("views/$action.php")){
     require_once ("views/$action.php");
 }
 else{

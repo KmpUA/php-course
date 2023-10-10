@@ -30,47 +30,6 @@ fetch("https://api.jsonbin.io/v3/b/645146669d312622a3562425")
             var floatValue = +(x);
             return floatValue;
         }
-
-        function displayImages(pageNumber) {
-            const startIndex = (pageNumber - 1) * imagesPerPage;
-            const endIndex = startIndex + imagesPerPage;
-            const pageImages = imagesData.slice(startIndex, endIndex);
-        
-            currentImages.forEach(image => {
-                image.remove();
-            });
-        
-            currentImages = [];
-        
-            pageImages.forEach(imageData => {
-                const image = document.createElement('article');
-                let finalCards = "";
-                image.classList.add('card');
-                image.setAttribute('draggable', true);
-                finalCards += `<div class="image-container-discount">
-                                        <img class="product-image" src="${imageData.src}" alt="Туристичне місце">`;
-                if (imageData.discount != "") {
-                    finalCards += `<div class="discount">${convert(imageData.discount)}%</div>`;
-                }
-                finalCards += `</div>
-                                    <div class="card-info">
-                                        <h2 class="card-title">${imageData.title}</h2>
-                                        <p class="product-price">${convert(imageData.price)}$</p>
-                                        <div class="add_buttons">
-                                            <button class="card-btn">Детальніше</button>
-                                            <button class="add-to-cart card-btn-style">Додати в кошик</button>
-                                        </div>
-                                        <div class="card-description">
-                                        <p id="desc">
-                                            ${imageData.description}</p>
-                                        </div>
-                                        <div class="region" style="display:none;">${imageData.region}</div>
-                                    </div>`;
-                image.innerHTML = finalCards;
-                imagesList.appendChild(image);
-                currentImages.push(image);
-            });
-        }
         
         function createPageButton(pageNumber) {
             const button = document.createElement("button");
@@ -83,7 +42,6 @@ fetch("https://api.jsonbin.io/v3/b/645146669d312622a3562425")
             }
             button.addEventListener("click", () => {
                 currentPage = pageNumber;
-                displayImages(currentPage);
                 updatePageButtons();
             });
             return button;
@@ -91,7 +49,7 @@ fetch("https://api.jsonbin.io/v3/b/645146669d312622a3562425")
         
         function updatePageButtons() {
             pageButtonsContainer.innerHTML = "";
-            const totalPages = Math.ceil(imagesData.length / imagesPerPage);
+            const totalPages = Math.ceil(document.querySelectorAll(".card").length / imagesPerPage);
         
             let startPage = 1;
             let endPage = totalPages;
@@ -118,7 +76,6 @@ fetch("https://api.jsonbin.io/v3/b/645146669d312622a3562425")
             }
         
         }
-        displayImages(currentPage);
         updatePageButtons();
         const startCards = imagesList.querySelectorAll('.card');
         
@@ -140,7 +97,7 @@ fetch("https://api.jsonbin.io/v3/b/645146669d312622a3562425")
                         break;
                     case 3:
                         cardsSort.sort((a, b) => {
-                            return a.lastChild.firstElementChild.innerText.localeCompare(b.lastChild.firstElementChild.innerText);
+                            return a.lastElementChild.children[0].innerText.localeCompare(b.lastElementChild.children[0].innerText);
                         });
                         break;
                     default:
@@ -203,10 +160,49 @@ fetch("https://api.jsonbin.io/v3/b/645146669d312622a3562425")
                 }
             });
         });
-        displayImages(currentPage);
         updatePageButtons();
     })
     .catch(error => console.error(error));
+const searchInput = document.querySelector(".search-input");
+const filterBtns = document.querySelectorAll(".filter-btn");
+const searchContainer = document.querySelector('.main-filter-container');
+const sortSelect = document.querySelector('#sort-select');
+
+searchContainer.addEventListener('click', (event) => {
+    searchInput.addEventListener("keyup", function () {
+        const searchTerm = searchInput.value.toLowerCase();
+        const cards = document.querySelectorAll('.card');
+        cards.forEach(function (card) {
+            const title = card.querySelector(".card-title").innerText.toLowerCase();
+            if (title.indexOf(searchTerm) != -1) {
+                card.style.display = "block";
+            } else {
+                card.style.display = "none";
+            }
+        });
+    });
+
+    filterBtns.forEach(function (btn) {
+        btn.addEventListener("click", function (e) {
+            const region = e.currentTarget.dataset.region;
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(function (card) {
+                if (region === "all") {
+                    card.style.display = "block";
+                } else {
+                    const title = card.querySelector('.region').innerText;
+                    if (title.indexOf(region) != -1) {
+                        card.style.display = "block";
+                    } else {
+                        card.style.display = "none";
+                    }
+                }
+            });
+        });
+    });
+});
+
+
 
 
 

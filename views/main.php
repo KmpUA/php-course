@@ -1,3 +1,9 @@
+<?php
+global $db;
+$db->use_table("tours");
+$array = $db->get("src", "price", "title", "region", "discount", "description", "author_id", "visible");
+?>
+                                                                                                                                    a
 <main>
     <div class="header-content">
       <h1 class="h1">
@@ -66,12 +72,44 @@
     </section>
     <section class="aside-wrapper">
       <article class="card-container" id="prod1">
+          <?php
+          foreach ($array as $tour => $tour_value){
+              if($tour_value["visible"] == 1){
+              ?>
+                  <article class="card" draggable="true">
+              <div class="image-container-discount">
+                  <img class="product-image" src="<?= $tour_value["src"] ?>" alt="Туристичне місце">`;
+                  <div class="discount"><?= $tour_value["discount"] . "%"?></div>
+              </div>
+                <div class="card-info">
+                    <h2 class="card-title"><?= $tour_value["title"] ?></h2>
+                    <p class="product-price"><?= $tour_value["price"] . "$" ?></p>
+                    <div class="add_buttons">
+                        <button class="card-btn">Детальніше</button>
+                        <button class="add-to-cart card-btn-style">Додати в кошик</button>
+                        <div style="font-size: xx-large" class="card-price">
+                            <?php $db->use_table("users");
+                                $author = $tour_value["author_id"];
+                                $result = $db->find("user_id = $author");
+                                echo "Автор: " . $result[0]["user_login"];
+                            ?></div>
+                    </div>
+                    <div class="card-description">
+                    <p id="desc">
+                        <?= $tour_value["description"] ?></p>
+                    </div>
+                    <div class="region" style="display:none;"><?= $tour_value["region"] ?></div>
+                </div>
+                  </article>
+          <?php }}
+          ?>
+
       </article>
     </section>
     <div class="pagination">
       <div id="page-buttons"></div>
     </div>
-  <div class="slider" loading="lazy">
+  <div class="slider">
     <div class="slide">
       <p>Арабські емірати</p>
     </div>
@@ -89,5 +127,6 @@
     </div>
   </div>
 </main>
-<script src="./js/load-images.js"></script>
-<script src="./js/aside.js"></script>
+<script src="js/load-images.js"></script>
+<script src="js/aside.js"></script>
+<script src="js/cards.js"></script>
