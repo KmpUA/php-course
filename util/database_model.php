@@ -52,8 +52,25 @@ class DatabaseModel {
             if ($this->current_table == '') {
                 throw new Exception("The table is not specified! Please open some database table to work with");
             }
+            if(in_array("date", $fields)){
+                $result = $this->db->query("SELECT " . join(", ", $fields) . " FROM {$this->props['name']}.{$this->current_table} ORDER BY date DESC" );
+            } else{
+                $result = $this->db->query("SELECT " . join(", ", $fields) . " FROM {$this->props['name']}.{$this->current_table}");
+            }
+            return $result->fetch_all(MYSQLI_ASSOC);
+        } catch (Exception $e) {
+            echo "Caught exception: ",  $e->getMessage(), "\n";
+        }
+        return array();
+    }
 
-            $result = $this->db->query("SELECT " . join(", ", $fields) . " FROM {$this->props['name']}.{$this->current_table}");
+    public function getQuery(string $query): array {
+        try {
+            if ($this->current_table == '') {
+                throw new Exception("The table is not specified! Please open some database table to work with");
+            }
+
+            $result = $this->db->query($query);
             return $result->fetch_all(MYSQLI_ASSOC);
         } catch (Exception $e) {
             echo "Caught exception: ",  $e->getMessage(), "\n";
@@ -106,6 +123,37 @@ class DatabaseModel {
             echo "Caught exception: ",  $e->getMessage(), "\n";
         }
     }
+
+    public function update(array $record, string $condition): void {
+        try {
+            if ($this->current_table == '') {
+                throw new Exception("The table is not specified! Please open some database table to work with");
+            }
+
+            $updates = [];
+            foreach ($record as $key => $value) {
+                $updates[] = "$key = '$value'";
+            }
+
+            $updatesString = join(", ", $updates);
+
+            $this->db->query("UPDATE {$this->current_table} SET $updatesString WHERE $condition;");
+        } catch (Exception $e) {
+            echo "Caught exception: ",  $e->getMessage(), "\n";
+        }
+    }
+
+    public function delete(string $condition): void {
+        try {
+            if ($this->current_table == '') {
+                throw new Exception("The table is not specified! Please open some database table to work with");
+            }
+            $this->db->query("DELETE FROM {$this->current_table} WHERE $condition;");
+        } catch (Exception $e) {
+            echo "Caught exception: ",  $e->getMessage(), "\n";
+        }
+    }
+
 
     /**
      * Get all records from a database table.

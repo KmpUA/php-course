@@ -1609,7 +1609,7 @@ aside{
   all: unset;
   width: 5vw;
   height: 1.5vw;
-  font-size: 1rem;
+  font-size: 2rem;
   background: transparent;
   border: none;
   position: relative;
@@ -1709,9 +1709,14 @@ aside{
 
 .search-container {
   display: flex;
+  margin: 25px;
+  width: 25%;
+  height: 8vw;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  background-color: white;
+  border-radius: 20px;
 }
 
 .chart-container {
@@ -1749,6 +1754,7 @@ aside{
   justify-content:center;
   flex-wrap: wrap;
   width: 100%;
+  padding: 10px;
 }
 
 .search-input[type=text] {
@@ -1763,6 +1769,7 @@ aside{
   padding: 5px;
   transition: all 0.4s ease-in-out;
   margin-right: 5px;
+  font-size: 1vw;
 }
 
 .search-input:focus {
@@ -1809,11 +1816,14 @@ aside{
   box-shadow: none;
   flex: 1;
   padding: 0 1em;
-  color: #fff;
-  background: #28282d;
+  color: black;
+  background: white;
   background-image: none;
   cursor: pointer;
+  border: 3px solid black;
+  border-radius: 10px;
   max-width: 10vw;
+  font-size: 0.7vw;
 }
 
 #sort-select::-ms-expand {
@@ -1827,6 +1837,31 @@ aside{
   overflow: hidden;
   margin: 5px;
   width: 100%;
+}
+
+.button-33 {
+  background-color: rgba(44, 123, 135, 0.8);
+  border-radius: 100px;
+  box-shadow: rgba(44, 123, 135, 0.2) 0 -25px 18px -14px inset,rgba(44, 123, 135, 0.15) 0 1px 2px,rgba(44, 123, 135, 0.15) 0 2px 4px,rgba(44, 123, 135, 0.15) 0 4px 8px,rgba(44, 187, 99, .15) 0 8px 16px,rgba(44, 187, 99, .15) 0 16px 32px;
+  color: white;
+  cursor: pointer;
+  display: inline-block;
+  font-family: CerebriSans-Regular,-apple-system,system-ui,Roboto,sans-serif;
+  padding: 7px 20px;
+  text-align: center;
+  text-decoration: none;
+  transition: all 250ms;
+  border: 0;
+  font-size: 1.5vw;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  margin: 5px;
+}
+
+.button-33:hover {
+  box-shadow: rgba(44,187,99,.35) 0 -25px 18px -14px inset,rgba(44,187,99,.25) 0 1px 2px,rgba(44,187,99,.25) 0 2px 4px,rgba(44,187,99,.25) 0 4px 8px,rgba(44,187,99,.25) 0 8px 16px,rgba(44,187,99,.25) 0 16px 32px;
+  transform: scale(1.05) rotate(-1deg);
 }
 
 .sort-container::after {
@@ -1939,8 +1974,10 @@ body.dark .support a {
   width: 20%;
   border-radius: 10px;
   padding: 20px 25px 40px;
+  margin-top: 20px;
   box-shadow: 0 12px 35px rgba(0, 0, 0, 0.1);
   color: black;
+  background-color: white;
 }
 
 .ranger-wrapper h2 {
@@ -1948,9 +1985,104 @@ body.dark .support a {
   font-weight: 600;
 }
 
-.ranger-wrapper p {
+.pagination {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.pagination p {
+  font-size: 4vw;
+  padding-bottom: 5px;
+}
+
+#page-buttons {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+}
+
+.styled-table {
+  border-collapse: collapse;
+  margin: 25px 0;
+  font-size: 1.3em;
+  font-family: sans-serif;
+  min-width: 400px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+.styled-table thead tr {
+  background-color: #009879;
+  color: #ffffff;
+  text-align: left;
+}
+.styled-table th,
+.styled-table td {
+  padding: 12px 15px;
+}
+.styled-table tbody tr {
+  border-bottom: 1px solid #dddddd;
+}
+
+.styled-table tbody tr:nth-of-type(even) {
+  background-color: #f3f3f3;
+}
+
+.styled-table tbody tr:nth-of-type(odd) {
+  background-color: #ffffff;
+}
+
+.styled-table tbody tr:last-of-type {
+  border-bottom: 2px solid #009879;
+}
+.styled-table tbody tr.active-row {
+  font-weight: bold;
+  color: #009879;
+}
+
+.crud_buttons{
+  display: flex;
+  flex-direction: row;
+  width: 50%;
+  justify-content: center;
+  align-items: center;
+  line-height: 2vw;
+}
+
+.crud_buttons a{
+  width: 30%;
+  height: 2vw;
+  text-align: center;
+  font-size: 1vw;
+  margin: 10px;
+}
+
+.page-button {
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  width: 6vw;
+  height: 3vw;
+  line-height: 2vw;
+  border-radius: 2vw;
+  margin: 10px 20px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1em;
+  text-transform: uppercase;
+  text-align: center;
+  letter-spacing: 3px;
+  font-weight: 600;
+  color: #524f4e;
+  background: white;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, .1);
+  transition: .3s;
+}
+
+.ranger-wrapper span {
   margin-top: 5px;
-  font-size: 1rem;
+  font-size: 1.5vw;
 }
 
 .price-input {
@@ -1970,7 +2102,7 @@ body.dark .support a {
   width: 100%;
   height: 100%;
   outline: none;
-  font-size: 19px;
+  font-size: 1vw;
   margin-left: 12px;
   border-radius: 5px;
   text-align: center;
@@ -2220,7 +2352,7 @@ input[type="range"]::-moz-range-thumb {
 
 .logout-btn{
   height: 50%;
-  width: 50%;
+  width: 70%;
   margin: 10px;
 }
 

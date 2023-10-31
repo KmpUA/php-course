@@ -172,7 +172,6 @@ Fri, Jul 14, 2023 - Xdebug 3.2.2
   </required>
  </dependencies>
  <providesextension>xdebug</providesextension>
- <zendextsrcrelease />
  <changelog>
   <release>
    <date>2023-03-21</date>

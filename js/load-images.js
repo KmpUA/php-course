@@ -1,8 +1,9 @@
-const imagesPerPage = 8;
+const imagesPerPage = 2;
 let currentPage = 1;
 let currentImages = [];
 
 const imagesList = document.getElementById("prod1");
+const startCards = imagesList.querySelectorAll('.card');
 const loadNextButton = document.getElementById("nextBtn");
 const loadPreviousButton = document.getElementById("prevBtn");
 const pageNumP = document.getElementById("page-num");
@@ -30,54 +31,7 @@ fetch("https://api.jsonbin.io/v3/b/645146669d312622a3562425")
             var floatValue = +(x);
             return floatValue;
         }
-        
-        function createPageButton(pageNumber) {
-            const button = document.createElement("button");
-            button.innerText = pageNumber;
-            if (pageNumber == currentPage) {
-                button.classList.add("chosen");
-            }
-            else {
-                button.classList.add("page-button");
-            }
-            button.addEventListener("click", () => {
-                currentPage = pageNumber;
-                updatePageButtons();
-            });
-            return button;
-        }
-        
-        function updatePageButtons() {
-            pageButtonsContainer.innerHTML = "";
-            const totalPages = Math.ceil(document.querySelectorAll(".card").length / imagesPerPage);
-        
-            let startPage = 1;
-            let endPage = totalPages;
-        
-            if (totalPages > 5) {
-                if (currentPage <= 3) {
-                    endPage = 5;
-                } else if (currentPage >= totalPages - 2) {
-                    startPage = totalPages - 4;
-                } else {
-                    startPage = currentPage - 2;
-                    endPage = currentPage + 2;
-                }
-            }
-            if (totalPages != 1) {
-                pageButtonsContainer.appendChild(createPageButton(1));
-                for (let i = startPage + 1; i < endPage; i++) {
-                    pageButtonsContainer.appendChild(createPageButton(i));
-                }
-                pageButtonsContainer.appendChild(createPageButton(totalPages));
-            }
-            else {
-                pageButtonsContainer.appendChild(createPageButton(totalPages));
-            }
-        
-        }
-        updatePageButtons();
-        const startCards = imagesList.querySelectorAll('.card');
+
         
         searchCon.addEventListener('click', () => {
             selector.addEventListener('change', (e) => {
@@ -160,7 +114,6 @@ fetch("https://api.jsonbin.io/v3/b/645146669d312622a3562425")
                 }
             });
         });
-        updatePageButtons();
     })
     .catch(error => console.error(error));
 const searchInput = document.querySelector(".search-input");

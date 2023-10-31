@@ -1,10 +1,8 @@
-<!DOCTYPE html>
 <?php
-$con = new mysqli("localhost","kmp","Max6112073","tourfirm");
-if ($con->connect_errno != 0){
-    die($con->connect_error);
-}
-
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+global $db;
 class User
 {
     private string $name;
@@ -58,30 +56,31 @@ $nameErr = $emailErr = $mobilenoErr = $passwordErr = $passwordcErr = "";
 $registerPswc = "";
 $validated = true;
 
-function input_data(mixed $signupLogin): string
+function input_data(string $signupLogin): string
 {
     $signupLogin = trim($signupLogin);
-    $signupLogin = stripcslashes($signupLogin);
+    $signupLogin = stripslashes($signupLogin);
     return htmlspecialchars($signupLogin);
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if(empty($_POST["signupLogin"])){
+
+    if (empty($_POST["signupLogin"])) {
         $nameErr = "Ви повинні ввести логін!";
         $validated = false;
-    } else{
+    } else {
         $registerUser->set_name(input_data($_POST["signupLogin"]));
-        if(!preg_match("/^[а-яА-Яa-zA-Z0-9_-]{4,}$/", $registerUser->getName())){
+        if (!preg_match("/^[а-яА-Яa-zA-Z0-9_-]{4,}$/", $registerUser->getName())) {
             $nameErr = "Не менше 4 кириличних або латинських літер!";
             $validated = false;
         }
     }
-    if(empty($_POST["signupEmail"])){
+    if (empty($_POST["signupEmail"])) {
         $emailErr = "Ви повинні ввести email!";
         $validated = false;
-    } else{
+    } else {
         $registerUser->set_email(input_data($_POST["signupEmail"]));
-        if(!filter_var($registerUser->getEmail(), FILTER_VALIDATE_EMAIL)){
+        if (!filter_var($registerUser->getEmail(), FILTER_VALIDATE_EMAIL)) {
             $emailErr = "Неправильно введений email!";
             $validated = false;
         }
@@ -91,48 +90,81 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $validated = false;
     } else {
         $registerUser->set_phoneNumber(input_data($_POST["phoneNumber"]));
-        if (!preg_match ("/^\(\d{3}\) \d{7}$/", $registerUser->getPhoneNumber()) && !preg_match("/^\+380\d{9}$/", $registerUser->getPhoneNumber()) && !preg_match("/^\(\d{3}\) \d{2}-\d{2}-\d{3}$/", $registerUser->getPhoneNumber()) && !preg_match("/^\+38 \(\d{3}\) \d{2} \d{2} \d{3}$/", $registerUser->getPhoneNumber())) {
+        $phoneNumber = $registerUser->getPhoneNumber();
+        if (!preg_match("/^\(\d{3}\) \d{7}$/", $phoneNumber) &&
+            !preg_match("/^\+380\d{9}$/", $phoneNumber) &&
+            !preg_match("/^\(\d{3}\) \d{2}-\d{2}-\d{3}$/", $phoneNumber) &&
+            !preg_match("/^\+38 \(\d{3}\) \d{2} \d{2} \d{3}$/", $phoneNumber)) {
             $mobilenoErr = "Неправильний формат номеру телефона!";
             $validated = false;
         }
     }
-    if(empty($_POST["signupPsw"])){
+    if (empty($_POST["signupPsw"])) {
         $passwordErr = "Ви повинні вести пароль!";
         $validated = false;
-    } else{
+    } else {
         $registerUser->set_password(input_data($_POST["signupPsw"]));
-        if(!preg_match("/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z0-9]{7,}$/", $registerUser->getPassword())){
+        if (!preg_match("/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z0-9]{7,}$/", $registerUser->getPassword())) {
             $passwordErr = "Пароль повинен містити не менше 7 літер, великі та малі літери, а також цифри!";
             $validated = false;
         }
     }
-    if(empty($_POST["signupPswc"])){
+    if (empty($_POST["signupPswc"])) {
         $passwordcErr = "Введіть пароль для підтвердження!";
         $validated = false;
-    } else{
+    } else {
         $signupPswc = input_data($_POST["signupPswc"]);
-        if($signupPswc != $registerUser->getPassword()){
+        if ($signupPswc != $registerUser->getPassword()) {
             $passwordcErr = "Паролі не співпадають!";
             $validated = false;
         }
     }
-    if($validated){
-        $date = date('Y-m-d H:i:s');
-        $name = $email = $phoneNumber = $signupPsw = "";
-        $name = $con->real_escape_string($registerUser->getName());
-        $email = $con->real_escape_string($registerUser->getEmail());
-        $phoneNumber = $con->real_escape_string($registerUser->getPhoneNumber());
-        $signupPsw = password_hash($con->real_escape_string($registerUser->getPassword()), PASSWORD_DEFAULT);
-        $query = "INSERT INTO users (user_login, user_email, user_password, user_phonenumber, admin, register_time) VALUES ('$name', '$email', '$signupPsw', '$phoneNumber', 0, '$date')";
-        if (!mysqli_query($con, $query)) {
-            printf("%d Row inserted.\n", mysqli_affected_rows($con));
+    $name = $registerUser->getName();
+    $email = $registerUser->getEmail();
+    $phoneNumber = $registerUser->getPhoneNumber();
+    $existingUserQuery = "SELECT user_login, user_email, user_phonenumber FROM users 
+                          WHERE user_login = '$name' OR user_email = '$email' OR user_phonenumber = '$phoneNumber'";
+    $mysqli = new mysqli($_ENV['DB_HOST'], $_ENV['DB_USER'], $_ENV['DB_PASSWORD'], $_ENV['DB_NAME']);
+    $result = $mysqli->query($existingUserQuery);
+
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            if ($row["user_login"] == $name) {
+                $nameErr = "Такий логін вже існує!";
+            }
+            if ($row["user_email"] == $email) {
+                $emailErr = "Такий email вже використовується!";
+            }
+            if ($row["user_phonenumber"] == $phoneNumber) {
+                $mobilenoErr = "Такий номер телефону вже використовується!";
+            }
         }
-        header("Location:/php-website/index.php?action=registration_succesful");
+        $validated = false;
+    }
+
+    if ($validated) {
+        $date = date('Y-m-d H:i:s');
+        $name = $mysqli->escape_string($registerUser->getName());
+        $email = $mysqli->escape_string($registerUser->getEmail());
+        $phoneNumber = $mysqli->escape_string($registerUser->getPhoneNumber());
+        $signupPsw = password_hash($mysqli->escape_string($registerUser->getPassword()), PASSWORD_DEFAULT);
+        $data = [
+            "user_login" => $name,
+            "user_email" => $email,
+            "user_password" => $signupPsw,
+            "user_phonenumber" => $phoneNumber,
+            "admin" => 0,
+            "register_time" => $date
+        ];
+
+        $db->create($data, 'users');
+
+        header("Location: /php-website/index.php?action=registration_succesful");
     }
 }
-
 ?>
 
+<!DOCTYPE html>
 <head>
     <link rel="stylesheet" href="css/login.css">
 </head>
@@ -166,27 +198,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <i class="fas fa-user"></i>
                             <input type="text" name="signupLogin" placeholder="Enter your name">
                         </div>
-                        <div class="error"><?=$nameErr?></div>
+                        <div class="error"><?= $nameErr ?></div>
                         <div class="input-box">
                             <i class="fas fa-envelope"></i>
                             <input type="text" name="signupEmail" placeholder="Enter your email">
                         </div>
-                        <div class="error"><?=$emailErr?></div>
+                        <div class="error"><?= $emailErr ?></div>
                         <div class="input-box">
                             <i class="fas fa-lock"></i>
                             <input type="password" name="signupPsw" placeholder="Enter your password">
                         </div>
-                        <div class="error"><?=$passwordErr?></div>
+                        <div class="error"><?= $passwordErr ?></div>
                         <div class="input-box">
                             <i class="fas fa-lock"></i>
                             <input type="password" name="signupPswc" placeholder="Enter password confirmation">
                         </div>
-                        <div class="error"><?=$passwordcErr?></div>
+                        <div class="error"><?= $passwordcErr ?></div>
                         <div class="input-box">
                             <i class="fas fa-lock"></i>
                             <input type="tel" name="phoneNumber" placeholder="Enter your phonenumber">
                         </div>
-                        <div class="error"><?=$mobilenoErr?></div>
+                        <div class="error"><?= $mobilenoErr ?></div>
                         <div class="button input-box">
                             <input type="submit" value="Зареєструватися">
                         </div>

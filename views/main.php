@@ -1,7 +1,25 @@
 <?php
+//ini_set('display_errors', 1);
+//ini_set('display_startup_errors', 1);
+//error_reporting(E_ALL);
+global $cache;
 global $db;
+
+use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
+
+require_once("./init.php");
 $db->use_table("tours");
-$array = $db->get("src", "price", "title", "region", "discount", "description", "author_id", "visible");
+$tours = $db->get("src", "price", "title", "region", "discount", "description", "author_id", "visible", "date", "rating");
+try {
+    $tours = cacheTours();
+} catch (PhpfastcacheInvalidArgumentException $e) {
+}
+$loggedin = "";
+
+if(isset($_SESSION["loggedin"]))
+{
+    $loggedin = $_SESSION["loggedin"];
+}
 ?>
                                                                                                                                     a
 <main>
@@ -53,6 +71,13 @@ $array = $db->get("src", "price", "title", "region", "discount", "description", 
             <input type="range" class="range-max" min="0" max="2500" value="2500" step="100">
         </div>
       </div>
+        <div class="crud_buttons">
+            <?php if($loggedin == "true") {?>
+                <a style="text-decoration: none" href="index.php?action=create_tour" class="card-btn">Додати тур</a>
+            <?php } ?>
+            <a style="text-decoration: none" href="index.php?action=tours" class="card-btn">Переглянути тури</a>
+        </div>
+
       <div class="search-container">
         <div class="sort-container">
             <input type="text" class="search-input" placeholder="Шукаємо..." />
@@ -64,16 +89,16 @@ $array = $db->get("src", "price", "title", "region", "discount", "description", 
         </div>
 
         <div class="filters">
-          <button class="filter-btn button-86" data-region="Європа">Europe</button>
-          <button class="filter-btn button-86" data-region="Азія">Asia</button>
-          <button class="filter-btn button-86" data-region="Америка">America</button>
+          <button class="button-33" data-region="Європа">Europe</button>
+          <button class="button-33" data-region="Азія">Asia</button>
+          <button class="button-33" data-region="Америка">America</button>
         </div>
       </div>
     </section>
     <section class="aside-wrapper">
       <article class="card-container" id="prod1">
           <?php
-          foreach ($array as $tour => $tour_value){
+          foreach ($tours as $tour => $tour_value){
               if($tour_value["visible"] == 1){
               ?>
                   <article class="card" draggable="true">
@@ -91,7 +116,8 @@ $array = $db->get("src", "price", "title", "region", "discount", "description", 
                             <?php $db->use_table("users");
                                 $author = $tour_value["author_id"];
                                 $result = $db->find("user_id = $author");
-                                echo "Автор: " . $result[0]["user_login"];
+                                $stars = str_repeat("★", (int)$tour_value["rating"]);
+                                echo "Автор: " . $result[0]["user_login"] . "<br>Rating: " . $stars;
                             ?></div>
                     </div>
                     <div class="card-description">
@@ -104,12 +130,17 @@ $array = $db->get("src", "price", "title", "region", "discount", "description", 
           <?php }}
           ?>
 
+
       </article>
+
     </section>
     <div class="pagination">
-      <div id="page-buttons"></div>
+        <div id="page-buttons">
+            <!-- Pagination buttons will be generated dynamically here -->
+        </div>
     </div>
-  <div class="slider">
+
+    <div class="slider">
     <div class="slide">
       <p>Арабські емірати</p>
     </div>
@@ -130,3 +161,4 @@ $array = $db->get("src", "price", "title", "region", "discount", "description", 
 <script src="js/load-images.js"></script>
 <script src="js/aside.js"></script>
 <script src="js/cards.js"></script>
+<script src="js/pagination.js"></script>

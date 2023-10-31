@@ -1,9 +1,5 @@
 <?php
-$status = $_SESSION["loggedin"];
 $authorizationButton = "Авторизація";
-if($status == "true"){
-    $authorizationButton = "Вийти";
-}
 ?>
 
 <!DOCTYPE html>
@@ -33,7 +29,7 @@ if($status == "true"){
 
         <figcaption class="figcaption">
             <?php
-            if($status == "true"){?>
+            if(isset($_SESSION['loggedin'])){?>
                 <div class="fig-author-figure-title"><?= $_SESSION["login"] ?></div>
                 <div class="fig-author-figure-title"><?php if($_SESSION["admin"] == 0) echo "User"; else echo "Admin";?></div>
                 <div class="fig-author-figure-title"><?= $_SESSION["register_date"] ?></div>
