@@ -157,7 +157,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             "register_time" => $date
         ];
 
-        $db->create($data, 'users');
+        $db->create($data);
 
         header("Location: /php-website/index.php?action=registration_succesful");
     }

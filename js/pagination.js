@@ -47,9 +47,6 @@ function generatePaginationButtons(currentPage) {
         const button = document.createElement("button");
         button.className = "page-button";
         button.textContent = i;
-        if(currentPage == startPage){
-            button.setAttribute('disabled', 'disabled');
-        }
         button.addEventListener("click", () => {
             showPage(i);
             generatePaginationButtons(i);

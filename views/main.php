@@ -9,7 +9,6 @@ use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 
 require_once("./init.php");
 $db->use_table("tours");
-$tours = $db->get("src", "price", "title", "region", "discount", "description", "author_id", "visible", "date", "rating");
 try {
     $tours = cacheTours();
 } catch (PhpfastcacheInvalidArgumentException $e) {
@@ -72,7 +71,7 @@ if(isset($_SESSION["loggedin"]))
         </div>
       </div>
         <div class="crud_buttons">
-            <?php if($loggedin == "true") {?>
+            <?php if($loggedin == "true" && $_SESSION["admin"] == 1) {?>
                 <a style="text-decoration: none" href="index.php?action=create_tour" class="card-btn">Додати тур</a>
             <?php } ?>
             <a style="text-decoration: none" href="index.php?action=tours" class="card-btn">Переглянути тури</a>

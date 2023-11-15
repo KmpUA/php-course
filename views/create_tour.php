@@ -1,4 +1,9 @@
 <?php
+
+global $cache;
+
+use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
+
 function checkFields(mixed $title, array $errors, mixed $price, mixed $discount, mixed $description, mixed $region, string $target_file): array
 {
     if (empty($title) || strlen($title) < 3) {
@@ -42,6 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if (empty($errors)) {
         $db->create(array("src" => $target_file,"title" => $title,"price" => $price,"discount" => $discount, "region" => $region, "description" => $description, "visible" => $_SESSION["admin"], "author_id" => $_SESSION["id"], "rating" => 0));
+        $cache->clear();
         ?>
         <script>window.location.href = "index.php?action=main"</script>
         <?php

@@ -55,8 +55,9 @@ class DatabaseModel {
             if(in_array("date", $fields)){
                 $result = $this->db->query("SELECT " . join(", ", $fields) . " FROM {$this->props['name']}.{$this->current_table} ORDER BY date DESC" );
             } else{
-                $result = $this->db->query("SELECT " . join(", ", $fields) . " FROM {$this->props['name']}.{$this->current_table}");
+                $result = $this->db->query("SELECT " . join(", ", $fields) . " FROM {$this->props['name']}.{$this->current_table}" );
             }
+
             return $result->fetch_all(MYSQLI_ASSOC);
         } catch (Exception $e) {
             echo "Caught exception: ",  $e->getMessage(), "\n";

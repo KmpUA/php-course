@@ -1,5 +1,8 @@
 <?php
-global $db;
+global $db, $cache;
+
+use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
+
 $db->use_table("tours");
 $tour_id = 0;
 $tour[0] = 0;
@@ -19,6 +22,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         $confirmation = $_POST['confirm_delete'] ?? false;
         if ($confirmation) {
             $db->delete("id=$tour_id");
+            $cache->clear();
             echo '<script>alert("Тур успішно видалено!")</script>';
         }
         else{

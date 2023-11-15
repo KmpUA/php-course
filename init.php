@@ -48,8 +48,8 @@ function cacheTours(): array
     $cache_instance = $cache->getItem('tours');
     if(is_null($cache_instance->get())){
         echo "Db";
-        $tours = $db->get("src", "price", "title", "region", "discount", "description", "author_id", "visible", "rating");
-        $cache_instance->set($tours)->expiresAfter(1000);
+        $tours = $db->get("src", "price", "title", "region", "discount", "description", "author_id", "visible", "rating", "date");
+        $cache_instance->set($tours)->expiresAfter(100);
         $cache->save($cache_instance);
         return $tours;
     } else{

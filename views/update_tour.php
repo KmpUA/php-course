@@ -2,6 +2,10 @@
 //ini_set('display_errors', 1);
 //ini_set('display_startup_errors', 1);
 //error_reporting(E_ALL);
+global $cache;
+
+use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
+
 $errors = array();
 global $db;
 $db->use_table("tours");
@@ -35,7 +39,7 @@ function checkFields(mixed $title, array $errors, mixed $price, mixed $discount,
         $errors['price'] = "Price must be a numeric value.";
     }
 
-    if (!is_numeric($discount) || $discount > 0) {
+    if (!is_numeric($discount)) {
         $errors['discount'] = "Discount must be a less 0.";
     }
 
@@ -67,7 +71,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     $rating = $_POST["rating"];
     $errors = checkFields($title, $errors, $price, $discount, $description, $region, $target_file);
     if (empty($errors)) {
-        $db->update(array("src" => $target_file,"title" => $title,"price" => $price,"discount" => $discount, "region" => $region, "description" => $description, "visible" => $visible, "author_id" => $author_id, "rating" => $rating), "id = $tour_id"); ?>
+        $db->update(array("src" => $target_file,"title" => $title,"price" => $price,"discount" => $discount, "region" => $region, "description" => $description, "visible" => $visible, "author_id" => $author_id, "rating" => $rating), "id = $tour_id");
+        $cache->clear();
+        ?>
         <script>
             window.location.replace("http://localhost/php-website/index.php?action=main");
         </script>
